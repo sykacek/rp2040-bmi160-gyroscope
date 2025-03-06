@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
 include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
-include($ENV{FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
 
 project(app)
 
@@ -31,5 +30,5 @@ pico_add_extra_outputs(app)
 pico_set_binary_type(app copy_to_ram)
 
 add_custom_target(flash
-		cp ${PROJECT_NAME}.uf2 /media/mike/RPI-RP2
+		cp ${PROJECT_NAME}.uf2 /media/user/RPI-RP2
 )
