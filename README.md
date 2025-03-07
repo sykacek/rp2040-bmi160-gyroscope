@@ -1,12 +1,12 @@
 # ABOUT
 
 This project demostrates how to connect [BMI160 IMU](https://www.bosch-sensortec.com/products/motion-sensors/imus/bmi160/) and [RP2040 MCU](https://www.raspberrypi.com/products/rp2040/). Data from BMI160
-are written to RP2040 internal flash memory for later data processing. MCU gets the IMU data with frequency 10Hz and stores them at
-staring offset `0x42000`, there is enough memory to read for 2 hours.
+are written to RP2040 internal flash memory for later data processing. MCU gets the IMU data with frequency 10Hz and writes them to flash memory every 2 seconds (0.5 Hz).
+Staring at offset `0x42000` there is enough memory to read for 4 hours.
 
 ## Applications
 
-This project was intented as cheap alternative of altimeter for hobby rockets, other hobby plane or rockets
+This project was intented as cheap alternative of altimeter for hobby rockets, planes etc.
 
 ## Dependencies
 
@@ -48,3 +48,15 @@ To save the memory image run
 ```
 And your data will be present from offset `0x42000`
 
+## Data format
+
+Since RP2040 can write to internal flash only page aligned buffer (256 byte alignment), there is a 16 byte header present at each page beginning, next 240 bytes are 120 word long IMU values. In terms of C that could be presented as
+```c
+	struct page {
+		char header[16]	= "DATA AB DATA ABC";
+		int16_t accel[3];
+		int16_t gyro[3];
+
+		/* IMU data repeat 20 times */
+	}
+```
